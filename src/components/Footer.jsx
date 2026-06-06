@@ -20,9 +20,8 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">{t('footer.product')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#hero" className="text-gray-400 hover:text-primary-400 transition-colors">{t('footer.home')}</a></li>
+              <li><a href="#home" className="text-gray-400 hover:text-primary-400 transition-colors">{t('footer.home')}</a></li>
               <li><a href="#products" className="text-gray-400 hover:text-primary-400 transition-colors">{t('footer.productsLink')}</a></li>
-              <li><a href="#pricing" className="text-gray-400 hover:text-primary-400 transition-colors">{t('footer.pricingLink')}</a></li>
             </ul>
           </div>
           <div>

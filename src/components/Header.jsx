@@ -20,7 +20,6 @@ export default function Header() {
     { key: 'home', href: '#hero' },
     { key: 'products', href: '#products' },
     { key: 'benefits', href: '#benefits' },
-    { key: 'pricing', href: '#pricing' },
     { key: 'faq', href: '#faq' },
     { key: 'contact', href: '#contact' },
   ]

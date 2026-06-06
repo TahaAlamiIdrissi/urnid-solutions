@@ -3,7 +3,6 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Products from './components/Products'
 import Benefits from './components/Benefits'
-import Pricing from './components/Pricing'
 import Testimonials from './components/Testimonials'
 import FAQ from './components/FAQ'
 import Contact from './components/Contact'
@@ -18,7 +17,6 @@ export default function App() {
         <About />
         <Products />
         <Benefits />
-        <Pricing />
         <Testimonials />
         <FAQ />
         <Contact />

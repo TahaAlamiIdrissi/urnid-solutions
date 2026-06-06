@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,551 +7,571 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    *,
-    *::before,
-    *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #1A2B5F;
+      --royal: #1D4ED8;
+      --medium: #2563EB;
+      --bright: #3B82F6;
+      --amber: #F59E0B;
+      --white: #FFFFFF;
     }
 
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: #e8e8e8;
-      padding: 30px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
     }
 
-    .sheet {
-      background: #fff;
-      width: 210mm;
-      padding: 15mm 12mm;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      border-radius: 4px;
-    }
-
-    .sheet h2 {
-      font-size: 10px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 10mm;
-      font-weight: 500;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6mm 8mm;
-      justify-items: center;
-    }
-
-    /* ===== CARD ===== */
     .card {
       width: 85mm;
       height: 55mm;
       position: relative;
       overflow: hidden;
-      border-radius: 2px;
-      background: linear-gradient(145deg, #0f1225, #0a0d1e);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 3px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
       display: flex;
       flex-direction: column;
     }
 
-    /* Gradient top border line */
-    .card::before {
+    /* ===== FRONT ===== */
+    .card-front {
+      background: var(--white);
+    }
+
+    /* Split layout: left navy panel + right white content */
+    .card-front::after {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #38bdf8, #8b5cf6, transparent);
+      width: 29mm;
+      height: 100%;
+      background: var(--navy);
+      z-index: 0;
     }
 
-    /* Subtle grid overlay */
-    .card::after {
-      content: '';
+    /* Accent bar on top */
+    .card-front .top-bar {
       position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
-      background-size: 8mm 8mm;
-      pointer-events: none;
+      top: 0; left: 0; right: 0;
+      height: 2.5px;
+      background: linear-gradient(90deg, var(--royal), var(--medium), var(--bright));
+      z-index: 3;
     }
 
-    .card-inner {
+    /* Amber dot */
+    .amber-dot {
+      position: absolute;
+      top: 4mm;
+      right: 4.5mm;
+      width: 4px;
+      height: 4px;
+      background: var(--amber);
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(245,158,11,0.4);
+      z-index: 3;
+    }
+
+    .front-inner {
       position: relative;
       z-index: 1;
       flex: 1;
-      padding: 4mm 4.5mm;
+      display: flex;
+    }
+
+    /* Left navy panel content */
+    .left-panel {
+      width: 29mm;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
-    }
-
-    /* ---- FRONT SIDE ---- */
-
-    .card-top {
-      display: flex;
       align-items: center;
-      gap: 3mm;
-      margin-bottom: auto;
+      justify-content: center;
+      padding: 3mm 2mm;
+      position: relative;
+      z-index: 2;
     }
 
-    .logo-small {
-      width: 10mm;
-      height: 10mm;
-      flex-shrink: 0;
-      background: rgba(56, 189, 248, 0.1);
+    .left-panel .logo-wrap {
+      width: 11mm;
+      height: 11mm;
+      background: rgba(255,255,255,0.08);
       border-radius: 3mm;
+      padding: 2mm;
+      border: 0.5px solid rgba(255,255,255,0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5mm;
-      border: 1px solid rgba(56, 189, 248, 0.15);
+      margin-bottom: 2mm;
     }
 
-    .logo-small img {
+    .left-panel .logo-wrap img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
-    .company-short {
+    .left-panel .initials {
+      font-size: 7px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 1mm;
+    }
+
+    /* Vertical divider line between panels */
+    .panel-divider {
+      width: 0.5px;
+      background: rgba(37,99,235,0.08);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Right content */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4mm 5mm 4mm 4.5mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .right-company {
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .tagline-short {
-      font-size: 6px;
-      color: rgba(148, 163, 184, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 500;
-    }
-
-    .card-divider {
-      width: 12mm;
-      height: 1.5px;
-      background: linear-gradient(90deg, #38bdf8, #8b5cf6);
-      border-radius: 2px;
-      margin: 1.5mm 0 2mm;
-    }
-
-    .person-name-card {
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
+      color: var(--navy);
       letter-spacing: 0.3px;
       line-height: 1.2;
     }
 
-    .person-role-card {
-      font-size: 7px;
-      color: #94a3b8;
-      font-weight: 400;
+    .right-tagline {
+      font-size: 5.5px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      font-weight: 700;
+      color: var(--medium);
       margin-top: 0.5mm;
     }
 
-    .card-contact {
-      margin-top: 1.5mm;
+    .right-divider {
+      width: 12mm;
+      height: 2px;
+      background: linear-gradient(90deg, var(--royal), var(--bright));
+      border-radius: 2px;
+      margin: 3mm 0 2.5mm;
+    }
+
+    .right-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    .right-role {
+      font-size: 6.5px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 0.3mm;
+      letter-spacing: 0.3px;
+    }
+
+    .right-contact {
       display: flex;
       flex-direction: column;
-      gap: 0.8mm;
+      gap: 0.7mm;
+      margin-top: 2.5mm;
     }
 
-    .card-contact .row {
+    .right-contact .row {
       display: flex;
       align-items: center;
-      gap: 2mm;
+      gap: 1.8mm;
     }
 
-    .card-contact .row svg {
-      width: 8px;
-      height: 8px;
+    .right-contact .row svg {
+      width: 6.5px;
+      height: 6.5px;
       flex-shrink: 0;
-      color: #38bdf8;
-      opacity: 0.7;
+      color: var(--royal);
+      opacity: 0.6;
     }
 
-    .card-contact .row span {
-      font-size: 6.5px;
-      color: #cbd5e1;
-      font-weight: 400;
-      letter-spacing: 0.2px;
-    }
-
-    .product-badge {
-      position: absolute;
-      bottom: 3.5mm;
-      right: 4.5mm;
-      display: inline-flex;
-      align-items: center;
-      gap: 1.5mm;
-      padding: 1mm 2.5mm;
-      background: rgba(56, 189, 248, 0.08);
-      border: 0.5px solid rgba(56, 189, 248, 0.15);
-      border-radius: 3mm;
+    .right-contact .row span {
       font-size: 6px;
-      color: #38bdf8;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      color: #475569;
+      font-weight: 400;
     }
 
-    .product-badge svg {
-      width: 8px;
-      height: 8px;
+    /* Decorative thin line on right edge */
+    .edge-line {
+      position: absolute;
+      right: 0;
+      top: 10mm;
+      bottom: 10mm;
+      width: 1.5px;
+      background: linear-gradient(180deg, transparent, rgba(37,99,235,0.08), transparent);
+      z-index: 2;
     }
 
-    /* ---- BACK SIDE ---- */
+    /* ===== BACK ===== */
     .card-back {
-      background: linear-gradient(145deg, #0f1225, #080b1a);
+      background: var(--navy);
+    }
+
+    .card-back .bottom-bar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2.5px;
+      background: linear-gradient(90deg, transparent 5%, var(--medium), var(--bright), transparent 95%);
+      z-index: 3;
+    }
+
+    .card-back .glow {
+      position: absolute;
+      top: -30mm;
+      right: -20mm;
+      width: 60mm;
+      height: 60mm;
+      background: radial-gradient(circle, rgba(37,99,235,0.1), transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-back .glow-2 {
+      position: absolute;
+      bottom: -15mm;
+      left: -15mm;
+      width: 40mm;
+      height: 40mm;
+      background: radial-gradient(circle, rgba(245,158,11,0.06), transparent 70%);
+      pointer-events: none;
     }
 
     .card-back-inner {
       position: relative;
       z-index: 1;
       flex: 1;
-      padding: 4mm;
+      padding: 4.5mm 5mm;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
 
-    .back-logo {
-      width: 9mm;
-      height: 9mm;
-      margin-bottom: 1.5mm;
-    }
-
-    .back-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .back-company {
-      font-size: 10px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .back-label {
+      font-size: 5.5px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      font-weight: 500;
       margin-bottom: 2mm;
     }
 
-    .back-qr-box {
+    .back-accent {
+      width: 6mm;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 2px;
+      margin-bottom: 2.5mm;
+    }
+
+    .back-value-prop {
+      font-size: 8px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 2.5mm;
+      max-width: 65mm;
+    }
+
+    .back-value-prop span {
+      color: var(--bright);
+    }
+
+    #back-qr {
       width: 18mm;
       height: 18mm;
-      background: #fff;
+      background: var(--white);
       padding: 1.5mm;
       border-radius: 2mm;
-      margin-bottom: 1.5mm;
+      margin-bottom: 2mm;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .back-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5mm;
+      padding: 1mm 3mm;
+      background: rgba(59,130,246,0.12);
+      border: 0.5px solid rgba(59,130,246,0.25);
+      border-radius: 3mm;
+      font-size: 6px;
+      color: var(--bright);
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .back-cta svg {
+      width: 7px;
+      height: 7px;
     }
 
     .back-url {
-      font-size: 5.5px;
-      color: #64748b;
-      letter-spacing: 0.5px;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    .back-tagline {
       font-size: 5px;
-      color: #334155;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 1mm;
+      color: rgba(255,255,255,0.35);
+      margin-top: 1.5mm;
+      letter-spacing: 0.5px;
     }
 
-    /* Cut marks */
-    .cut-marks {
-      position: relative;
-    }
-
-    .cut-marks .card {
-      border: 1px dashed #ccc;
-    }
-
-    /* Toolbar */
+    /* Download toolbar */
     .toolbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(10, 13, 30, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 10px 20px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+      gap: 10px;
+      margin-top: 10px;
     }
 
-    .toolbar label {
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .toolbar select {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #e2e8f0;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .btn-print {
-      padding: 6px 18px;
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+    .btn-dl {
+      padding: 10px 24px;
       border: none;
       border-radius: 8px;
-      color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .btn-print:hover {
+    .btn-dl svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-dl-primary {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .btn-dl-primary:hover {
+      background: var(--royal);
       transform: translateY(-1px);
-      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
     }
 
-    /* ===== PRINT STYLES ===== */
+    .btn-dl-secondary {
+      background: rgba(26,43,95,0.06);
+      color: var(--navy);
+      border: 1px solid rgba(26,43,95,0.15);
+    }
+
+    .btn-dl-secondary:hover {
+      background: rgba(26,43,95,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* Print */
     @media print {
-      body {
-        background: #fff;
-        padding: 0;
-        margin: 0;
-      }
-
-      .toolbar {
-        display: none !important;
-      }
-
-      .sheet {
-        box-shadow: none;
-        margin: 0;
-        padding: 0;
-        border-radius: 0;
-        width: 210mm;
-      }
-
-      .sheet h2 {
-        display: none;
-      }
-
-      .card {
-        box-shadow: none;
-        border-radius: 0;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .card::before {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .cut-marks .card {
-        border: none;
-      }
-
-      /* Cut lines around each card */
-      .card-wrapper {
-        position: relative;
-        outline: 1px dashed #ccc;
-        outline-offset: -0.5px;
-      }
+      body { background: #fff; padding: 0; gap: 0; }
+      .toolbar { display: none !important; }
+      .card { box-shadow: none; border-radius: 0; page-break-after: always;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
-
-    @page {
-      margin: 0;
-      size: A4 portrait;
-    }
+    @page { margin: 0; size: A4 portrait; }
   </style>
 </head>
 <body>
 
-  <!-- Toolbar -->
-  <div class="toolbar" id="toolbar">
-    <label>Cards per sheet:</label>
-    <select id="cardsPerSheet" onchange="updateLayout()">
-      <option value="10">10 cards (2×5)</option>
-      <option value="8" selected>8 cards (2×4)</option>
-    </select>
-    <button class="btn-print" onclick="window.print()">🖨 Print</button>
+  <!-- === FRONT === -->
+  <div class="card card-front">
+    <div class="top-bar"></div>
+    <div class="amber-dot"></div>
+    <div class="edge-line"></div>
+    <div class="front-inner">
+      <!-- Left navy panel -->
+      <div class="left-panel">
+        <div class="logo-wrap">
+          <img src="./images/logo.png" alt="URNID" />
+        </div>
+        <div class="initials">URNID</div>
+      </div>
+      <div class="panel-divider"></div>
+      <!-- Right content -->
+      <div class="right-panel">
+        <div class="right-company">URNID SOLUTIONS</div>
+        <div class="right-tagline">YOUR problem our solution</div>
+        <div class="right-divider"></div>
+        <div class="right-name">Taha Alami Idrissi</div>
+        <div class="right-role">Fondateur</div>
+        <div class="right-contact">
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>taha.alami.idrissi@gmail.com</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>urnid-solutions.com</span>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Casablanca, Maroc</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div style="height: 50px"></div>
-
-  <!-- ===== FRONT SHEET ===== -->
-  <div class="sheet" id="frontSheet">
-    <h2>Front — Print this side first, then flip and print back</h2>
-    <div class="card-grid" id="frontGrid"></div>
+  <!-- === BACK === -->
+  <div class="card card-back">
+    <div class="bottom-bar"></div>
+    <div class="glow"></div>
+    <div class="glow-2"></div>
+    <div class="card-back-inner">
+      <div class="back-label">Digitalisez votre stock</div>
+      <div class="back-accent"></div>
+      <div class="back-value-prop">
+        Gérez votre inventaire en <span>temps réel</span>.<br/>
+        Plus de pertes. Plus d'erreurs. <span>100% traçable</span>.
+      </div>
+      <div id="back-qr"></div>
+      <div class="back-cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Decouvrir ElectroStock
+      </div>
+      <div class="back-url">urnid-solutions.com</div>
+    </div>
   </div>
 
-  <!-- ===== BACK SHEET ===== -->
-  <div class="sheet" id="backSheet">
-    <h2>Back — Feed the same sheets again to print the reverse side</h2>
-    <div class="card-grid" id="backGrid"></div>
+  <!-- === TOOLBAR === -->
+  <div class="toolbar">
+    <button class="btn-dl btn-dl-primary" onclick="downloadPDF()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download PDF
+    </button>
+    <button class="btn-dl btn-dl-secondary" onclick="downloadPNG()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download PNG
+    </button>
   </div>
 
   <script>
-    const CARD_DATA = {
-      name: 'Taha Alami Idrissi',
-      role: 'Fondateur',
-      company: 'URNID SOLUTIONS',
-      tagline: 'SaaS pour PME Marocaines',
-      email: 'taha.alami.idrissi@gmail.com',
-      website: 'urnid-solutions.com',
-      product: 'ElectroStock',
-      location: 'Maroc',
-      qrUrl: 'https://urnid-solutions.com',
-    };
+    new QRCode(document.getElementById('back-qr'), {
+      text: 'https://urnid-solutions.com',
+      width: 54,
+      height: 54,
+      colorDark: '#1A2B5F',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H,
+    });
 
-    function createFrontCard(index) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card-wrapper';
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-inner">
-          <div class="card-top">
-            <div class="logo-small">
-              <img src="./images/logo.png" alt="URNID" />
-            </div>
-            <div>
-              <div class="company-short">${CARD_DATA.company}</div>
-              <div class="tagline-short">${CARD_DATA.tagline}</div>
-            </div>
-          </div>
-          <div class="card-divider"></div>
-          <div class="person-name-card">${CARD_DATA.name}</div>
-          <div class="person-role-card">${CARD_DATA.role}</div>
-          <div class="card-contact">
-            <div class="row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <span>${CARD_DATA.email}</span>
-            </div>
-            <div class="row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              <span>${CARD_DATA.website}</span>
-            </div>
-            <div class="row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>${CARD_DATA.location}</span>
-            </div>
-          </div>
-          <div class="product-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
-            ${CARD_DATA.product}
-          </div>
-        </div>
-      `;
-
-      wrapper.appendChild(card);
-      return wrapper;
+    function downloadPDF() {
+      window.print()
     }
 
-    function createBackCard(index) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card-wrapper';
+    function downloadPNG() {
+      const btn = document.querySelector('.btn-dl-secondary');
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
 
-      const card = document.createElement('div');
-      card.className = 'card card-back';
-      card.innerHTML = `
-        <div class="card-back-inner">
-          <div class="back-logo">
-            <img src="./images/logo.png" alt="URNID" />
-          </div>
-          <div class="back-company">${CARD_DATA.company}</div>
-          <div class="back-qr-box" id="back-qr-${index + 1}"></div>
-          <div class="back-url">${CARD_DATA.website}</div>
-          <div class="back-tagline">SaaS · Smart · Simple</div>
-        </div>
-      `;
-
-      wrapper.appendChild(card);
-      return wrapper;
-    }
-
-    const frontGrid = document.getElementById('frontGrid');
-    const backGrid = document.getElementById('backGrid');
-    let currentCount = 8;
-
-    function updateLayout() {
-      const select = document.getElementById('cardsPerSheet');
-      currentCount = parseInt(select.value);
-
-      frontGrid.innerHTML = '';
-      backGrid.innerHTML = '';
-
-      for (let i = 0; i < currentCount; i++) {
-        frontGrid.appendChild(createFrontCard(i));
+      // Load html2canvas on demand
+      if (typeof html2canvas === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        script.onload = function() {
+          generatePNG(btn);
+        };
+        script.onerror = function() {
+          alert('Could not load image generator. Please use "Download PDF" instead (then save as PDF from the print dialog).');
+          btn.textContent = 'Download PNG';
+          btn.disabled = false;
+        };
+        document.head.appendChild(script);
+      } else {
+        generatePNG(btn);
       }
+    }
 
-      // Render back cards — need a microtask for DOM to be ready
-      requestAnimationFrame(() => {
-        backGrid.innerHTML = '';
-        for (let i = 0; i < currentCount; i++) {
-          const backCard = createBackCard(i);
-          backGrid.appendChild(backCard);
-        }
-        requestAnimationFrame(() => {
-          generateBackQRCodes();
+    function generatePNG(btn) {
+      const frontCard = document.querySelector('.card-front');
+      const backCard = document.querySelector('.card-back');
+
+      // Create a temp container with both cards stacked
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed; left:-9999px; top:0; background:#fff;';
+      container.innerHTML = `
+        <div style="width:85mm; height:55mm; margin-bottom:5mm; position:relative;">${frontCard.innerHTML}</div>
+        <div style="width:85mm; height:55mm; position:relative;">${backCard.innerHTML}</div>
+      `;
+      document.body.appendChild(container);
+
+      // Copy computed styles inline for html2canvas
+      const frontClone = container.firstElementChild;
+      const backClone = container.lastElementChild;
+      frontClone.className = frontCard.className;
+      backClone.className = backCard.className;
+
+      // Add pseudo-elements via inline styles where possible
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        .card-front::after { content:''; position:absolute; top:0; left:0; width:29mm; height:100%; background:#1A2B5F; z-index:0; }
+        .card-front .top-bar { position:absolute; top:0; left:0; right:0; height:2.5px; background:linear-gradient(90deg,#1D4ED8,#2563EB,#3B82F6); z-index:3; }
+        .card-back .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:2.5px; background:linear-gradient(90deg,transparent 5%,#2563EB,#3B82F6,transparent 95%); z-index:3; }
+      `;
+      container.appendChild(styleEl);
+
+      // Wait for images to load
+      setTimeout(function() {
+        html2canvas(container, {
+          scale: 4,
+          backgroundColor: '#e8e8e8',
+          useCORS: true,
+          logging: false,
+        }).then(function(canvas) {
+          document.body.removeChild(container);
+          const link = document.createElement('a');
+          link.download = 'urnid-solutions-business-card.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          btn.textContent = 'Download PNG';
+          btn.disabled = false;
+        }).catch(function() {
+          document.body.removeChild(container);
+          // Fallback: try capturing each card separately
+          captureSeparate(btn);
         });
-      });
+      }, 500);
     }
 
-    function generateBackQRCodes() {
-      for (let i = 0; i < currentCount; i++) {
-        const container = document.getElementById(`back-qr-${i + 1}`);
-        if (container) {
-          container.innerHTML = '';
-          try {
-            new QRCode(container, {
-              text: CARD_DATA.qrUrl,
-              width: 54,
-              height: 54,
-              colorDark: '#0f1225',
-              colorLight: '#ffffff',
-              correctLevel: QRCode.CorrectLevel.H,
-            });
-          } catch(e) {
-            setTimeout(() => generateBackQRCodes(), 200);
-            return;
-          }
-        }
-      }
-    }
+    function captureSeparate(btn) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 85 * 8;  // 8px per mm
+      canvas.height = 110 * 8; // two cards stacked
+      const ctx = canvas.getContext('2d');
 
-    // Initial render
-    updateLayout();
+      // Capture printed version via print as fallback
+      alert('PNG generation failed. Please use "Download PDF" instead.');
+      btn.textContent = 'Download PNG';
+      btn.disabled = false;
+    }
   </script>
 </body>
 </html>

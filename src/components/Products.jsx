@@ -42,17 +42,13 @@ export default function Products() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="http://localhost:5173"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#contact"
                   className="px-5 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-primary-500/20"
                 >
                   {t('products.learnMore')}
                 </a>
                 <a
-                  href="http://localhost:5173"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#contact"
                   className="px-5 py-2.5 bg-white/80 dark:bg-white/5 text-gray-900 dark:text-white text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-500 transition-all backdrop-blur-sm"
                 >
                   {t('products.tryFree')}

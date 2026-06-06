@@ -8,10 +8,28 @@ export default function Contact() {
   const titleRef = useScrollReveal()
   const formRef = useScrollReveal()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 5000)
+    const form = e.target
+    const data = new FormData(form)
+
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/taha.alami.idrissi@gmail.com', {
+        method: 'POST',
+        body: data,
+      })
+      if (res.ok) {
+        setSubmitted(true)
+        form.reset()
+        setTimeout(() => setSubmitted(false), 5000)
+      }
+    } catch {
+      // Fallback: open mailto as a backup
+      const name = data.get('name')
+      const email = data.get('email')
+      const message = data.get('message')
+      window.location.href = `mailto:taha.alami.idrissi@gmail.com?subject=Contact URNID - ${name}&body=${encodeURIComponent(`De: ${name} (${email})\n\n${message}`)}`
+    }
   }
 
   return (
@@ -33,24 +51,26 @@ export default function Contact() {
         ) : (
           <div ref={formRef} className="rounded-2xl border border-gray-200 dark:border-[#1e2140] bg-gray-50 dark:bg-[#0f1225] p-8 shadow-xl shadow-primary-500/5">
             <form onSubmit={handleSubmit} className="space-y-5 max-w-xl mx-auto">
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_template" value="table" />
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">{t('contact.nameLabel')}</label>
                 <input
-                  type="text" required placeholder={t('contact.placeholderName')}
+                  type="text" name="name" required placeholder={t('contact.placeholderName')}
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-[#1e2140] bg-white dark:bg-[#080b1a] text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400 outline-none transition-all text-sm"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">{t('contact.emailLabel')}</label>
                 <input
-                  type="email" required placeholder={t('contact.placeholderEmail')}
+                  type="email" name="email" required placeholder={t('contact.placeholderEmail')}
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-[#1e2140] bg-white dark:bg-[#080b1a] text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400 outline-none transition-all text-sm"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">{t('contact.messageLabel')}</label>
                 <textarea
-                  rows={4} required placeholder={t('contact.placeholderMessage')}
+                  rows={4} name="message" required placeholder={t('contact.placeholderMessage')}
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-[#1e2140] bg-white dark:bg-[#080b1a] text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400 outline-none transition-all text-sm resize-none"
                 />
               </div>
@@ -63,8 +83,8 @@ export default function Contact() {
             </form>
             <p className="text-center text-gray-500 dark:text-gray-500 text-sm mt-6">
               {t('contact.orEmail')}{' '}
-              <a href="mailto:contact@urnidsolutions.com" className="text-primary-500 dark:text-primary-400 hover:underline font-medium">
-                contact@urnidsolutions.com
+              <a href="mailto:taha.alami.idrissi@gmail.com" className="text-primary-500 dark:text-primary-400 hover:underline font-medium">
+                taha.alami.idrissi@gmail.com
               </a>
             </p>
           </div>

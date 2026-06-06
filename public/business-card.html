@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URNID SOLUTIONS — Business Card</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #e8e8e8;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sheet {
+      background: #fff;
+      width: 210mm;
+      padding: 15mm 12mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border-radius: 4px;
+    }
+
+    .sheet h2 {
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10mm;
+      font-weight: 500;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6mm 8mm;
+      justify-items: center;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      width: 85mm;
+      height: 55mm;
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+      background: linear-gradient(145deg, #0f1225, #0a0d1e);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Gradient top border line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #8b5cf6, transparent);
+    }
+
+    /* Subtle grid overlay */
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+      background-size: 8mm 8mm;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      padding: 4mm 4.5mm;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- FRONT SIDE ---- */
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      margin-bottom: auto;
+    }
+
+    .logo-small {
+      width: 10mm;
+      height: 10mm;
+      flex-shrink: 0;
+      background: rgba(56, 189, 248, 0.1);
+      border-radius: 3mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5mm;
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+
+    .logo-small img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .company-short {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline-short {
+      font-size: 6px;
+      color: rgba(148, 163, 184, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+    }
+
+    .card-divider {
+      width: 12mm;
+      height: 1.5px;
+      background: linear-gradient(90deg, #38bdf8, #8b5cf6);
+      border-radius: 2px;
+      margin: 1.5mm 0 2mm;
+    }
+
+    .person-name-card {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    .person-role-card {
+      font-size: 7px;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-top: 0.5mm;
+    }
+
+    .card-contact {
+      margin-top: 1.5mm;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8mm;
+    }
+
+    .card-contact .row {
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+    }
+
+    .card-contact .row svg {
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+      color: #38bdf8;
+      opacity: 0.7;
+    }
+
+    .card-contact .row span {
+      font-size: 6.5px;
+      color: #cbd5e1;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+
+    .product-badge {
+      position: absolute;
+      bottom: 3.5mm;
+      right: 4.5mm;
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5mm;
+      padding: 1mm 2.5mm;
+      background: rgba(56, 189, 248, 0.08);
+      border: 0.5px solid rgba(56, 189, 248, 0.15);
+      border-radius: 3mm;
+      font-size: 6px;
+      color: #38bdf8;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .product-badge svg {
+      width: 8px;
+      height: 8px;
+    }
+
+    /* ---- BACK SIDE ---- */
+    .card-back {
+      background: linear-gradient(145deg, #0f1225, #080b1a);
+    }
+
+    .card-back-inner {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      padding: 4mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-logo {
+      width: 9mm;
+      height: 9mm;
+      margin-bottom: 1.5mm;
+    }
+
+    .back-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-company {
+      font-size: 10px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2mm;
+    }
+
+    .back-qr-box {
+      width: 18mm;
+      height: 18mm;
+      background: #fff;
+      padding: 1.5mm;
+      border-radius: 2mm;
+      margin-bottom: 1.5mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-url {
+      font-size: 5.5px;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .back-tagline {
+      font-size: 5px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 1mm;
+    }
+
+    /* Cut marks */
+    .cut-marks {
+      position: relative;
+    }
+
+    .cut-marks .card {
+      border: 1px dashed #ccc;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 13, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    }
+
+    .toolbar label {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .toolbar select {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-print {
+      padding: 6px 18px;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-print:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        margin: 0;
+      }
+
+      .toolbar {
+        display: none !important;
+      }
+
+      .sheet {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        width: 210mm;
+      }
+
+      .sheet h2 {
+        display: none;
+      }
+
+      .card {
+        box-shadow: none;
+        border-radius: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .card::before {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .cut-marks .card {
+        border: none;
+      }
+
+      /* Cut lines around each card */
+      .card-wrapper {
+        position: relative;
+        outline: 1px dashed #ccc;
+        outline-offset: -0.5px;
+      }
+    }
+
+    @page {
+      margin: 0;
+      size: A4 portrait;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <label>Cards per sheet:</label>
+    <select id="cardsPerSheet" onchange="updateLayout()">
+      <option value="10">10 cards (2×5)</option>
+      <option value="8" selected>8 cards (2×4)</option>
+    </select>
+    <button class="btn-print" onclick="window.print()">🖨 Print</button>
+  </div>
+
+  <div style="height: 50px"></div>
+
+  <!-- ===== FRONT SHEET ===== -->
+  <div class="sheet" id="frontSheet">
+    <h2>Front — Print this side first, then flip and print back</h2>
+    <div class="card-grid" id="frontGrid"></div>
+  </div>
+
+  <!-- ===== BACK SHEET ===== -->
+  <div class="sheet" id="backSheet">
+    <h2>Back — Feed the same sheets again to print the reverse side</h2>
+    <div class="card-grid" id="backGrid"></div>
+  </div>
+
+  <script>
+    const CARD_DATA = {
+      name: 'Taha Alami Idrissi',
+      role: 'Fondateur',
+      company: 'URNID SOLUTIONS',
+      tagline: 'SaaS pour PME Marocaines',
+      email: 'taha.alami.idrissi@gmail.com',
+      website: 'urnid-solutions.com',
+      product: 'ElectroStock',
+      location: 'Maroc',
+      qrUrl: 'https://urnid-solutions.com',
+    };
+
+    function createFrontCard(index) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'card-wrapper';
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="logo-small">
+              <img src="./images/logo.png" alt="URNID" />
+            </div>
+            <div>
+              <div class="company-short">${CARD_DATA.company}</div>
+              <div class="tagline-short">${CARD_DATA.tagline}</div>
+            </div>
+          </div>
+          <div class="card-divider"></div>
+          <div class="person-name-card">${CARD_DATA.name}</div>
+          <div class="person-role-card">${CARD_DATA.role}</div>
+          <div class="card-contact">
+            <div class="row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span>${CARD_DATA.email}</span>
+            </div>
+            <div class="row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>${CARD_DATA.website}</span>
+            </div>
+            <div class="row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>${CARD_DATA.location}</span>
+            </div>
+          </div>
+          <div class="product-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
+            ${CARD_DATA.product}
+          </div>
+        </div>
+      `;
+
+      wrapper.appendChild(card);
+      return wrapper;
+    }
+
+    function createBackCard(index) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'card-wrapper';
+
+      const card = document.createElement('div');
+      card.className = 'card card-back';
+      card.innerHTML = `
+        <div class="card-back-inner">
+          <div class="back-logo">
+            <img src="./images/logo.png" alt="URNID" />
+          </div>
+          <div class="back-company">${CARD_DATA.company}</div>
+          <div class="back-qr-box" id="back-qr-${index + 1}"></div>
+          <div class="back-url">${CARD_DATA.website}</div>
+          <div class="back-tagline">SaaS · Smart · Simple</div>
+        </div>
+      `;
+
+      wrapper.appendChild(card);
+      return wrapper;
+    }
+
+    const frontGrid = document.getElementById('frontGrid');
+    const backGrid = document.getElementById('backGrid');
+    let currentCount = 8;
+
+    function updateLayout() {
+      const select = document.getElementById('cardsPerSheet');
+      currentCount = parseInt(select.value);
+
+      frontGrid.innerHTML = '';
+      backGrid.innerHTML = '';
+
+      for (let i = 0; i < currentCount; i++) {
+        frontGrid.appendChild(createFrontCard(i));
+      }
+
+      // Render back cards — need a microtask for DOM to be ready
+      requestAnimationFrame(() => {
+        backGrid.innerHTML = '';
+        for (let i = 0; i < currentCount; i++) {
+          const backCard = createBackCard(i);
+          backGrid.appendChild(backCard);
+        }
+        requestAnimationFrame(() => {
+          generateBackQRCodes();
+        });
+      });
+    }
+
+    function generateBackQRCodes() {
+      for (let i = 0; i < currentCount; i++) {
+        const container = document.getElementById(`back-qr-${i + 1}`);
+        if (container) {
+          container.innerHTML = '';
+          try {
+            new QRCode(container, {
+              text: CARD_DATA.qrUrl,
+              width: 54,
+              height: 54,
+              colorDark: '#0f1225',
+              colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.H,
+            });
+          } catch(e) {
+            setTimeout(() => generateBackQRCodes(), 200);
+            return;
+          }
+        }
+      }
+    }
+
+    // Initial render
+    updateLayout();
+  </script>
+</body>
+</html>

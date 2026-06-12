@@ -14,7 +14,7 @@ export default function Contact() {
     const data = new FormData(form)
 
     try {
-      const res = await fetch('https://formsubmit.co/ajax/taha.alami.idrissi@gmail.com', {
+      const res = await fetch('https://formsubmit.co/ajax/talassi@urnid-solutions.com', {
         method: 'POST',
         body: data,
       })
@@ -28,7 +28,7 @@ export default function Contact() {
       const name = data.get('name')
       const email = data.get('email')
       const message = data.get('message')
-      window.location.href = `mailto:taha.alami.idrissi@gmail.com?subject=Contact URNID - ${name}&body=${encodeURIComponent(`De: ${name} (${email})\n\n${message}`)}`
+      window.location.href = `mailto:talassi@urnid-solutions.com?subject=Contact URNID - ${name}&body=${encodeURIComponent(`De: ${name} (${email})\n\n${message}`)}`
     }
   }
 
@@ -83,8 +83,8 @@ export default function Contact() {
             </form>
             <p className="text-center text-gray-500 dark:text-gray-500 text-sm mt-6">
               {t('contact.orEmail')}{' '}
-              <a href="mailto:taha.alami.idrissi@gmail.com" className="text-primary-500 dark:text-primary-400 hover:underline font-medium">
-                taha.alami.idrissi@gmail.com
+              <a href="mailto:talassi@urnid-solutions.com" className="text-primary-500 dark:text-primary-400 hover:underline font-medium">
+                talassi@urnid-solutions.com
               </a>
             </p>
           </div>

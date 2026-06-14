@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://urnid-solutions.com/sitemap.xml
